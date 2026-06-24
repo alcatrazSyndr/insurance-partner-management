@@ -22,7 +22,7 @@ namespace InsurancePartnerManagement.Repositories
         {
             using var connection = GetConnection();
 
-            return connection.Query<Partner>("SELECT * FROM Partners ORDER BY CreatedAtUtdc DESC");
+            return connection.Query<Partner>("SELECT * FROM Partners ORDER BY CreatedAtUtc DESC");
         }
 
         public Partner? GetPartnerById(int id)
