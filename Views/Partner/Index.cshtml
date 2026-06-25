@@ -41,7 +41,7 @@
         </tbody>
     </table>
 
-    <div class="modal fade" id="partnerModal" tabindex="-1">
+    <div class="modal" id="partnerModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="policyModal" tabindex="-1">
+    <div class="modal" id="policyModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -95,9 +95,10 @@
         });
 
         $(document).ready(function () {
-            $('.partner-row').click(function () {
-                var id = $(this).data('id');
-                $.get('/Partner/Details/' + id, function (data) {
+            var currentPartnerId = null;
+
+            function showPartnerModal(partnerId) {
+                $.get('/Partner/Details/' + partnerId, function (data) {
                     var partner = data.partner;
                     var policies = data.policies;
 
@@ -117,7 +118,7 @@
                         <hr>
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h5>Police</h5>
-                            <button type="button" class="btn btn-primary" id="addPolicyBtn" data-partner-id="${partner.id}">Dodaj policu</button>
+                            <button type="button" class="btn btn-primary btn-sm" id="addPolicyBtn" data-partner-id="${partner.id}">Dodaj policu</button>
                         </div>
                         ${policies.length === 0 ? '<p class="text-muted">Nema unesenih polica</p>' : `
                         <table class="table table-sm">
@@ -131,10 +132,22 @@
                     $('#modalBody').html(html);
                     $('#partnerModal').modal('show');
                 });
+            }
+
+            $('.partner-row').click(function () {
+                var id = $(this).data('id');
+                showPartnerModal(id);
+            });
+
+            $('#policyModal').on('hidden.bs.modal', function () {
+                if (currentPartnerId) {
+                    showPartnerModal(currentPartnerId);
+                }
             });
 
             $(document).on('click', '#addPolicyBtn', function () {
                 var partnerId = $(this).data('partner-id');
+                currentPartnerId = partnerId;
                 $('#policyPartnerId').val(partnerId);
                 $('#partnerModal').modal('hide');
                 $('#policyModal').modal('show');
