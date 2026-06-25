@@ -66,5 +66,14 @@ namespace InsurancePartnerManagement.Repositories
 
             return connection.ExecuteScalar<int>(sql, policy);
         }
+
+        public (int Count, decimal TotalAmount) GetPolicyStats(int partnerId)
+        {
+            using var connection = GetConnection();
+
+            var sql = "SELECT COUNT(*) as Count, COALESCE(SUM(Amount), 0) as TotalAmount FROM Policies WHERE PartnerId = @PartnerId";
+
+            return connection.QueryFirstOrDefault<(int Count, decimal TotalAmount)>(sql, new { PartnerId = partnerId });
+        }
     }
 }

@@ -93,5 +93,18 @@ namespace InsurancePartnerManagement.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        public IActionResult GetPolicyStats(int partnerId)
+        {
+            try
+            {
+                var stats = _repository.GetPolicyStats(partnerId);
+                return Json(new { count = stats.Count, totalAmount = stats.TotalAmount });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

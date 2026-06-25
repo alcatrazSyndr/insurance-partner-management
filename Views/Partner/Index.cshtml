@@ -97,6 +97,23 @@
         $(document).ready(function () {
             var currentPartnerId = null;
 
+            function checkAndMarkPartner(partnerId, nameCell) {
+                $.get('/Partner/GetPolicyStats?partnerId=' + partnerId, function (stats) {
+                    if (stats.count > 5 || stats.totalAmount > 5000) {
+                        var current = nameCell.text();
+                        if (!current.startsWith('* ')) {
+                            nameCell.text('* ' + current);
+                        }
+                    }
+                });
+            }
+
+            $('.partner-row').each(function () {
+                var partnerId = $(this).data('id');
+                var nameCell = $(this).find('td:first');
+                checkAndMarkPartner(partnerId, nameCell);
+            });
+
             function showPartnerModal(partnerId) {
                 $.get('/Partner/Details/' + partnerId, function (data) {
                     var partner = data.partner;
@@ -185,6 +202,10 @@
                     $('#policyModal').modal('hide');
                     $('#policyNumber').val('');
                     $('#policyAmount').val('');
+
+                    var row = $('.partner-row[data-id="' + partnerId + '"]');
+                    var nameCell = row.find('td:first');
+                    checkAndMarkPartner(partnerId, nameCell);
                 })
                 .fail(function () {
                     alert('Greška pri spremanju police');
