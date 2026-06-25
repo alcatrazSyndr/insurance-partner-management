@@ -76,8 +76,15 @@ namespace InsurancePartnerManagement.Controllers
                 return BadRequest(ModelState);
             }
 
-            _repository.CreatePolicy(policy);
-            return Ok();
+            try
+            {
+                _repository.CreatePolicy(policy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
