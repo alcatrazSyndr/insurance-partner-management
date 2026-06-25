@@ -1,0 +1,90 @@
+﻿@model InsurancePartnerManagement.Models.Partner
+
+@{
+    ViewData["Title"] = "Novi partner";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Novi partner</h2>
+        <a asp-controller="Partner" asp-action="Index" class="btn btn-secondary">Povratak na listu</a>
+    </div>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken
+
+        <div class="form-group">
+            <label asp-for="FirstName">Ime</label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName">Prezime</label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Address">Adresa (neobavezno)</label>
+            <input asp-for="Address" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PartnerNumber">Broj partnera (točno 20 znamenki)</label>
+            <input asp-for="PartnerNumber" class="form-control" />
+            <span asp-validation-for="PartnerNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CroatianPIN">OIB (neobavezno)</label>
+            <input asp-for="CroatianPIN" class="form-control" />
+            <span asp-validation-for="CroatianPIN" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PartnerTypeId">Tip partnera</label>
+            <select asp-for="PartnerTypeId" class="form-control">
+                <option value="">-- Odaberi --</option>
+                <option value="1">Personal</option>
+                <option value="2">Legal</option>
+            </select>
+            <span asp-validation-for="PartnerTypeId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CreatedByUser">Email korisnika</label>
+            <input asp-for="CreatedByUser" class="form-control" />
+            <span asp-validation-for="CreatedByUser" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="IsForeign">Stranac</label>
+            <select asp-for="IsForeign" class="form-control">
+                <option value="">-- Odaberi --</option>
+                <option value="false">Ne</option>
+                <option value="true">Da</option>
+            </select>
+            <span asp-validation-for="IsForeign" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ExternalCode">External Code (neobavezno, 10-20 znakova)</label>
+            <input asp-for="ExternalCode" class="form-control" />
+            <span asp-validation-for="ExternalCode" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Gender">Spol</label>
+            <select asp-for="Gender" class="form-control">
+                <option value="">-- Odaberi --</option>
+                <option value="M">Muški (M)</option>
+                <option value="F">Ženski (F)</option>
+                <option value="N">Nije definirano (N)</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Spremi partnera</button>
+    </form>
+</div>
