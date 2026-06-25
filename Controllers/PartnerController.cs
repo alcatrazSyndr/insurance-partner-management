@@ -1,4 +1,5 @@
-﻿using InsurancePartnerManagement.Models;
+﻿using InsurancePartnerManagement.Helpers;
+using InsurancePartnerManagement.Models;
 using InsurancePartnerManagement.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,12 @@ namespace InsurancePartnerManagement.Controllers
                 return View(partner);
             }
 
+            if (!string.IsNullOrEmpty(partner.CroatianPIN) && !OibValidator.IsValid(partner.CroatianPIN))
+            {
+                ModelState.AddModelError("CroatianPIN", "OIB nije ispravan");
+                return View(partner);
+            }
+
             try
             {
                 var id = _repository.CreatePartner(partner);
@@ -44,7 +51,14 @@ namespace InsurancePartnerManagement.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Greška pri spremanju: " + ex.Message);
+                if (ex.Message.Contains("UNIQUE constraint failed: Partners.ExternalCode"))
+                {
+                    ModelState.AddModelError("ExternalCode", "Partner sa ovim External Code-om već postoji");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Greška pri spremanju: " + ex.Message);
+                }
                 return View(partner);
             }
         }

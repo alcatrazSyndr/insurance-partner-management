@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS Partners (
 	CreatedAtUtc DATETIME NOT NULL DEFAULT(datetime('now')),
 	CreatedByUser TEXT NOT NULL CHECK(length(CreatedByUser) <= 255 AND CreatedByUser LIKE '%_@__%.__%'),
 	IsForeign INTEGER NOT NULL CHECK(IsForeign IN (0, 1)),
-ExternalCode TEXT CHECK(ExternalCode IS NULL OR (length(ExternalCode) >= 10 AND length(ExternalCode) <= 20)) UNIQUE,
+	ExternalCode TEXT CHECK(ExternalCode IS NULL OR (length(ExternalCode) >= 10 AND length(ExternalCode) <= 20)) UNIQUE,
 	Gender TEXT NOT NULL CHECK(Gender IN ('M', 'F', 'N'))
 );
 

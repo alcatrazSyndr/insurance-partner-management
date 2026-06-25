@@ -17,6 +17,7 @@
             <tr>
                 <th>Ime i prezime</th>
                 <th>Broj partnera</th>
+                <th>OIB</th>
                 <th>Tip</th>
                 <th>Spol</th>
                 <th>Stranac</th>
@@ -32,6 +33,7 @@
                     class="partner-row @(ViewBag.NewPartnerId == partner.Id ? "table-success" : "")">
                     <td>@partner.FirstName @partner.LastName</td>
                     <td>@partner.PartnerNumber</td>
+                    <td>@(partner.CroatianPIN ?? "-")</td>
                     <td>@(partner.PartnerTypeId == 1 ? "Personal" : "Legal")</td>
                     <td>@partner.Gender</td>
                     <td>@(partner.IsForeign ? "Da" : "Ne")</td>
