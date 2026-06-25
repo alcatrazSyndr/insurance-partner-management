@@ -51,20 +51,27 @@ namespace InsurancePartnerManagement.Controllers
 
         public IActionResult Details(int id)
         {
-            var partner = _repository.GetPartnerById(id);
-            if (partner == null)
+            try
             {
-                return NotFound();
+                var partner = _repository.GetPartnerById(id);
+                if (partner == null)
+                {
+                    return NotFound();
+                }
+
+                var policies = _repository.GetPoliciesByPartnerId(id);
+                var partnerPolicies = new PartnerPolicies
+                {
+                    Partner = partner,
+                    Policies = policies.ToList()
+                };
+
+                return Json(partnerPolicies);
             }
-
-            var policies = _repository.GetPoliciesByPartnerId(id);
-            var partnerPolicies = new PartnerPolicies
+            catch (Exception ex)
             {
-                Partner = partner,
-                Policies = policies.ToList()
-            };
-
-            return Json(partnerPolicies);
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]

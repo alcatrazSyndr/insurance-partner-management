@@ -38,4 +38,60 @@
             }
         </tbody>
     </table>
+
+    <div class="modal fade" id="partnerModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalji partnera</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.partner-row').click(function () {
+                var id = $(this).data('id');
+                $.get('/Partner/Details/' + id, function (data) {
+                    var partner = data.partner;
+                    var policies = data.policies;
+
+                    var html = `
+                        <table class="table table-sm" style="border-top: none;">
+                            <tr style="border-top: none;"><th style="border-top: none;">Ime i prezime</th><td style="border-top: none;">${partner.firstName} ${partner.lastName}</td></tr>
+                            <tr><th>Adresa</th><td>${partner.address ?? '-'}</td></tr>
+                            <tr><th>Broj partnera</th><td>${partner.partnerNumber}</td></tr>
+                            <tr><th>OIB</th><td>${partner.croatianPIN ?? '-'}</td></tr>
+                            <tr><th>Tip</th><td>${partner.partnerTypeId === 1 ? 'Personal' : 'Legal'}</td></tr>
+                            <tr><th>Datum unosa</th><td>${new Date(partner.createdAtUtc).toLocaleString('hr-HR')}</td></tr>
+                            <tr><th>Unio korisnik</th><td>${partner.createdByUser}</td></tr>
+                            <tr><th>Stranac</th><td>${partner.isForeign ? 'Da' : 'Ne'}</td></tr>
+                            <tr><th>External Code</th><td>${partner.externalCode ?? '-'}</td></tr>
+                            <tr><th>Spol</th><td>${partner.gender}</td></tr>
+                        </table>
+                        <hr>
+                        <h5>Police</h5>
+                        ${policies.length === 0 ? '<p class="text-muted">Nema unesenih polica</p>' : `
+                        <table class="table table-sm">
+                            <thead><tr><th>Broj police</th><th>Iznos</th></tr></thead>
+                            <tbody>
+                                ${policies.map(p => `<tr><td>${p.policyNumber}</td><td>${p.amount}</td></tr>`).join('')}
+                            </tbody>
+                        </table>`}
+                    `;
+
+                    $('#modalBody').html(html);
+                    $('#partnerModal').modal('show');
+                });
+            });
+        });
+    </script>
+}
