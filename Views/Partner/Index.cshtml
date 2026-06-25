@@ -5,6 +5,8 @@
 }
 
 <div class="container mt-4">
+    @Html.AntiForgeryToken()
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Lista partnera</h2>
         <a href="/Partner/Create" class="btn btn-primary">Novi partner</a>
@@ -53,10 +55,45 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="policyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Unos police</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="policyForm">
+                        <input type="hidden" id="policyPartnerId" />
+                        <div class="form-group">
+                            <label>Broj police (10-15 znakova)</label>
+                            <input type="text" id="policyNumber" class="form-control" />
+                            <span id="policyNumberError" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Iznos police</label>
+                            <input type="number" id="policyAmount" class="form-control" step="0.01" />
+                            <span id="policyAmountError" class="text-danger"></span>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="savePolicyBtn">Spremi policu</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     <script>
+        $.ajaxSetup({
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            }
+        });
+
         $(document).ready(function () {
             $('.partner-row').click(function () {
                 var id = $(this).data('id');
@@ -78,7 +115,10 @@
                             <tr><th>Spol</th><td>${partner.gender}</td></tr>
                         </table>
                         <hr>
-                        <h5>Police</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5>Police</h5>
+                            <button type="button" class="btn btn-primary" id="addPolicyBtn" data-partner-id="${partner.id}">Dodaj policu</button>
+                        </div>
                         ${policies.length === 0 ? '<p class="text-muted">Nema unesenih polica</p>' : `
                         <table class="table table-sm">
                             <thead><tr><th>Broj police</th><th>Iznos</th></tr></thead>
@@ -90,6 +130,51 @@
 
                     $('#modalBody').html(html);
                     $('#partnerModal').modal('show');
+                });
+            });
+
+            $(document).on('click', '#addPolicyBtn', function () {
+                var partnerId = $(this).data('partner-id');
+                $('#policyPartnerId').val(partnerId);
+                $('#partnerModal').modal('hide');
+                $('#policyModal').modal('show');
+            });
+
+            $('#savePolicyBtn').click(function () {
+                var policyNumber = $('#policyNumber').val();
+                var amount = $('#policyAmount').val();
+                var partnerId = $('#policyPartnerId').val();
+
+                var valid = true;
+
+                if (policyNumber.length < 10 || policyNumber.length > 15) {
+                    $('#policyNumberError').text('Broj police mora imati između 10 i 15 znakova');
+                    valid = false;
+                } else {
+                    $('#policyNumberError').text('');
+                }
+
+                if (!amount || amount <= 0) {
+                    $('#policyAmountError').text('Iznos mora biti veći od 0');
+                    valid = false;
+                } else {
+                    $('#policyAmountError').text('');
+                }
+
+                if (!valid) return;
+
+                $.post('/Partner/CreatePolicy', {
+                    PolicyNumber: policyNumber,
+                    Amount: amount,
+                    PartnerId: partnerId
+                })
+                .done(function () {
+                    $('#policyModal').modal('hide');
+                    $('#policyNumber').val('');
+                    $('#policyAmount').val('');
+                })
+                .fail(function () {
+                    alert('Greška pri spremanju police');
                 });
             });
         });
