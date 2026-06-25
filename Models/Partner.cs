@@ -31,6 +31,7 @@ namespace InsurancePartnerManagement.Models
 
         [Required(ErrorMessage = "Email korisnika je obavezan")]
         [EmailAddress(ErrorMessage = "Neispravan format email adrese")]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$", ErrorMessage = "Neispravan format email adrese")]
         [StringLength(255, ErrorMessage = "Email ne smije biti duži od 255 znakova")]
         public string CreatedByUser { get; set; } = string.Empty;
 

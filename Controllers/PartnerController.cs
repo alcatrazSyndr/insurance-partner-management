@@ -14,9 +14,11 @@ namespace InsurancePartnerManagement.Controllers
             _repository = new PartnerRepository(connectionString);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? newPartnerId)
         {
             var partners = _repository.GetAllPartners();
+
+            ViewBag.NewPartnerId = newPartnerId;
 
             return View(partners);
         }
@@ -35,8 +37,16 @@ namespace InsurancePartnerManagement.Controllers
                 return View(partner);
             }
 
-            var id = _repository.CreatePartner(partner);
-            return RedirectToAction("Index", new { newPartnerId = id });
+            try
+            {
+                var id = _repository.CreatePartner(partner);
+                return RedirectToAction("Index", new { newPartnerId = id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Greška pri spremanju: " + ex.Message);
+                return View(partner);
+            }
         }
 
         public IActionResult Details(int id)
