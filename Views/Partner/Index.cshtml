@@ -19,8 +19,8 @@
                 <th>Broj partnera</th>
                 <th>OIB</th>
                 <th>Tip</th>
-                <th>Spol</th>
                 <th>Stranac</th>
+                <th>Spol</th>
                 <th>Datum unosa</th>
             </tr>
         </thead>
@@ -31,12 +31,12 @@
                 <tr data-id="@partner.Id"
                     style="cursor:pointer"
                     class="partner-row @(ViewBag.NewPartnerId == partner.Id ? "table-success" : "")">
-                    <td>@partner.FirstName @partner.LastName</td>
+                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@partner.FirstName @partner.LastName</td>
                     <td>@partner.PartnerNumber</td>
                     <td>@(partner.CroatianPIN ?? "-")</td>
                     <td>@(partner.PartnerTypeId == 1 ? "Personal" : "Legal")</td>
-                    <td>@partner.Gender</td>
                     <td>@(partner.IsForeign ? "Da" : "Ne")</td>
+                    <td>@partner.Gender</td>
                     <td>@partner.CreatedAtUtc.ToString("dd.MM.yyyy HH:mm")</td>
                 </tr>
             }
@@ -123,9 +123,9 @@
 
                     var html = `
                         <table class="table table-sm" style="border-top: none;">
-                            <tr style="border-top: none;"><th style="border-top: none;">Ime i prezime</th><td style="border-top: none;">${partner.firstName} ${partner.lastName}</td></tr>
-                            <tr><th>Adresa</th><td>${partner.address ?? '-'}</td></tr>
-                            <tr><th>Broj partnera</th><td>${partner.partnerNumber}</td></tr>
+                            <tr style="border-top: none;"><th style="border-top: none; width: 140px;">Ime i prezime</th><td style="border-top: none; word-break: break-all;">${partner.firstName} ${partner.lastName}</td></tr>
+                            <tr><th>Adresa</th><td style="word-break: break-all;">${partner.address ?? '-'}</td></tr>
+                            <tr><th>Broj partnera</th><td style="word-break: break-all;">${partner.partnerNumber}</td></tr>
                             <tr><th>OIB</th><td>${partner.croatianPIN ?? '-'}</td></tr>
                             <tr><th>Tip</th><td>${partner.partnerTypeId === 1 ? 'Personal' : 'Legal'}</td></tr>
                             <tr><th>Datum unosa</th><td>${new Date(partner.createdAtUtc).toLocaleString('hr-HR')}</td></tr>
@@ -143,7 +143,7 @@
                         <table class="table table-sm">
                             <thead><tr><th>Broj police</th><th>Iznos</th></tr></thead>
                             <tbody>
-                                ${policies.map(p => `<tr><td>${p.policyNumber}</td><td>${p.amount}</td></tr>`).join('')}
+                                ${policies.map(p => `<tr><td>${p.policyNumber}</td><td>${p.amount.toLocaleString('hr-HR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</td></tr>`).join('')}
                             </tbody>
                         </table>`}
                     `;

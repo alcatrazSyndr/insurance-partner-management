@@ -1,4 +1,6 @@
+using Dapper;
 using InsurancePartnerManagement.Database;
+using InsurancePartnerManagement.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,7 @@ app.MapControllerRoute(
     pattern: "{controller=Partner}/{action=Index}/{id?}");
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+SqlMapper.AddTypeHandler(new DecimalTypeHandler());
 DatabaseInitializer.Initialize(connectionString);
 
 app.Run();
