@@ -11,7 +11,7 @@
     </div>
 
     <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken
+        @Html.AntiForgeryToken()
 
         <div class="form-group">
             <label asp-for="FirstName">Ime</label>
@@ -32,13 +32,13 @@
 
         <div class="form-group">
             <label asp-for="PartnerNumber">Broj partnera (točno 20 znamenki)</label>
-            <input asp-for="PartnerNumber" class="form-control" />
+            <input asp-for="PartnerNumber" class="form-control" type="tel" />
             <span asp-validation-for="PartnerNumber" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label asp-for="CroatianPIN">OIB (neobavezno)</label>
-            <input asp-for="CroatianPIN" class="form-control" />
+            <input asp-for="CroatianPIN" class="form-control" type="tel" />
             <span asp-validation-for="CroatianPIN" class="text-danger"></span>
         </div>
 
@@ -88,3 +88,8 @@
         <button type="submit" class="btn btn-primary">Spremi partnera</button>
     </form>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+}

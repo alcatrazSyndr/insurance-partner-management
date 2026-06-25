@@ -17,7 +17,7 @@ namespace InsurancePartnerManagement.Models
         public string? Address { get; set; }
 
         [Required(ErrorMessage = "Broj partnera je obavezan")]
-        [RegularExpression(@"^\d{20}$", ErrorMessage = "Broj partnera mora sadržavati točno 20 znamenki")]
+        [RegularExpression(@"^\d{20}$", ErrorMessage = "Broj partnera mora sadržavati točno 20 brojčanih znamenki (0-9), bez slova ili razmaka")]
         public string PartnerNumber { get; set; } = string.Empty;
 
         [RegularExpression(@"^\d{11}$", ErrorMessage = "OIB mora sadržavati točno 11 znamenki")]
